@@ -18,7 +18,7 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
 
 	self:UpdateTexture()
 
-	local map_w, map_h = self.img:GetSize()
+	local map_w, map_h = self.bg:GetSize()
 	local map_w, map_h = map_w*mapscale, map_h*mapscale
 
 	self.mapsize = {w=map_w, h=map_h}
@@ -26,7 +26,7 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
 	self.img:SetSize(map_w,map_h,0)
 	self.bg:SetSize(map_w,map_h,0)
 
-	self.bg:SetTint(1,1,1,0.5)
+	self.bg:SetTint(1,1,1,0.75)
 	self.bg:SetClickable(false)
 
     self.togglebutton = self:AddChild(ImageButton())
@@ -101,7 +101,7 @@ function MiniMapWidget:OnGainFocus()
 end
 
 function MiniMapWidget:OnLoseFocus()
-	self.bg:SetTint(1,1,1,0.5)
+	self.bg:SetTint(1,1,1,0.75)
 
 	-- reset to orig value
 	TheCamera:SetControllable(self.camera_controllable_reset)

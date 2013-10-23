@@ -1,5 +1,5 @@
 
-local mapscale = 0.15
+local mapscale = 0.225
 local x_pos = -235
 local y_pos = -25
 
