@@ -1,5 +1,5 @@
 -- This information tells other players more about the mod
-name = "Minimap"
+name = "Minimap HUD"
 description = "Adds a minimap to the HUD"
 author = "squeek"
 version = "1.0.0"
