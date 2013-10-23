@@ -9,7 +9,7 @@ version = "1.0.0"
 -- http://forums.kleientertainment.com/showthread.php?19505-Modders-Your-new-friend-at-Klei!
 -- becomes
 -- 19505-Modders-Your-new-friend-at-Klei!
-forumthread = "/files/file/352-minimap/"
+forumthread = "/files/file/352-minimap-hud/"
 
 -- This lets other players know if your mod is out of date, update it to match the current version in the game
 api_version = 4
