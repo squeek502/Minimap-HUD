@@ -1,7 +1,44 @@
 
-local mapscale = 0.225
-local x_pos = -235
-local y_pos = -25
+local mapscale = GetModConfigData("Minimap Size")
+local position_str = GetModConfigData("Position")
+local margin_size_x = GetModConfigData("Horizontal Margin")
+local margin_size_y = GetModConfigData("Vertical Margin")
+
+local dir_vert = 0
+local dir_horiz = 0
+local anchor_vert = 0
+local anchor_horiz = 0
+local margin_dir_vert = 0
+local margin_dir_horiz = 0
+local y_align, x_align = position_str:match("(%a+)_(%a+)")
+
+if x_align == "left" then
+	dir_horiz = -1
+	anchor_horiz = 1
+	margin_dir_horiz = 1
+elseif x_align == "center" then
+	dir_horiz = 0
+	anchor_horiz = 0
+	margin_dir_horiz = 0
+elseif x_align == "right" then
+	dir_horiz = 1
+	anchor_horiz = -1
+	margin_dir_horiz = -1
+end
+
+if y_align == "top" then
+	dir_vert = 0
+	anchor_vert = -1
+	margin_dir_vert = -1
+elseif y_align == "middle" then
+	dir_vert = -1
+	anchor_vert = 0
+	margin_dir_vert = 0
+elseif y_align == "bottom" then
+	dir_vert = -2
+	anchor_vert = 1
+	margin_dir_vert = 1
+end
 
 ----------------------------------------
 -- Do the stuff
@@ -9,6 +46,18 @@ local y_pos = -25
 
 local require = GLOBAL.require
 local GetWorld = GLOBAL.GetWorld
+
+local function PositionMiniMap(controls, screensize)
+	local hudscale = controls.top_root:GetScale()
+	local screenw_full, screenh_full = GLOBAL.unpack(screensize)
+	local screenw = screenw_full/hudscale.x
+	local screenh = screenh_full/hudscale.y
+	controls.minimap_small:SetPosition(
+		(anchor_horiz*controls.minimap_small.mapsize.w/2)+(dir_horiz*screenw/2)+(margin_dir_horiz*margin_size_x), 
+		(anchor_vert*controls.minimap_small.mapsize.h/2)+(dir_vert*screenh/2)+(margin_dir_vert*margin_size_y), 
+		0
+	)
+end
 
 local function AddMiniMap( inst )
 
@@ -20,8 +69,18 @@ local function AddMiniMap( inst )
 		local MiniMapWidget = require "widgets/minimapwidget"
 
 		local controls = inst.HUD.controls
-		controls.minimap_small = controls.topright_root:AddChild( MiniMapWidget( mapscale ) )
-		controls.minimap_small:SetPosition(x_pos - controls.minimap_small.mapsize.w/2, y_pos - controls.minimap_small.mapsize.h/2, 0)
+		controls.minimap_small = controls.top_root:AddChild( MiniMapWidget( mapscale ) )
+		local screensize = {TheSim:GetScreenSize()}
+		PositionMiniMap(controls, screensize)
+
+		local OnUpdate_base = controls.OnUpdate
+		controls.OnUpdate = function(self, dt)
+			local curscreensize = {TheSim:GetScreenSize()}
+			if curscreensize[1] ~= screensize[1] or curscreensize[2] ~= screensize[2] then
+				PositionMiniMap(controls, curscreensize)
+				screensize = curscreensize
+			end
+		end
 
 		-- show and hide the minimap whenever the map gets toggled
 		local ToggleMap_base = controls.ToggleMap
