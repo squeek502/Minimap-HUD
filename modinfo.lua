@@ -9,7 +9,7 @@ dont_starve_compatible = true
 reign_of_giants_compatible = true
 
 -- this setting is dumb; this mod is likely compatible with all future versions
-api_version = 6
+api_version = 10
 
 configuration_options =
 {
