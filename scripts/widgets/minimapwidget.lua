@@ -39,6 +39,7 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
 	self.mapscreenzoom = 1
 	self.minimapzoom = 0
 	self.lastpos = nil
+	self.uvscale = 1
     
 	--self.minimap:ResetOffset()	
 	self:StartUpdating()
@@ -116,17 +117,33 @@ function MiniMapWidget:SetTextureHandle(handle)
 end
 
 function MiniMapWidget:OnZoomIn(  )
-	if self.shown then
-		self.minimap:Zoom( -1 )
-		self.minimapzoom = math.max(0,self.minimapzoom-1)
-	end
+    if self.shown then
+        if self.minimapzoom == 0 then
+            self.uvscale = math.min(1.875, (2.0 + self.uvscale)/2)
+        end
+        self.img:SetUVScale(self.uvscale, self.uvscale)
+        self.minimap:Zoom( -1 )
+        self.minimapzoom = math.max(0,self.minimapzoom-1)
+    end
 end
-
+ 
 function MiniMapWidget:OnZoomOut( )
-	if self.shown then
-		self.minimap:Zoom( 1 )
-		self.minimapzoom = self.minimapzoom+1
-	end
+    if self.shown then
+        local dozoom = true
+        if self.minimapzoom == 0 then
+            if self.uvscale - 1 > 0.05 then
+                self.uvscale = math.max(1, 2*self.uvscale - 2)
+                dozoom = false
+            else
+                self.uvscale = 1
+            end
+            self.img:SetUVScale(self.uvscale, self.uvscale)
+        end
+        if dozoom then
+            self.minimap:Zoom( 1 )
+            self.minimapzoom = self.minimapzoom+1
+        end
+    end
 end
 
 function MiniMapWidget:UpdateTexture()
@@ -142,7 +159,7 @@ function MiniMapWidget:OnUpdate(dt)
 	if TheInput:IsControlPressed(CONTROL_PRIMARY) then
 		local pos = TheInput:GetScreenPosition()
 		if self.lastpos then
-			local scale = 1
+			local scale = 1/(self.uvscale*self.uvscale)
 			local dx = scale * ( pos.x - self.lastpos.x )
 			local dy = scale * ( pos.y - self.lastpos.y )
 			self.minimap:Offset( dx, dy )
