@@ -74,6 +74,7 @@ local function AddMiniMap(controls)
 
 		local OnUpdate_base = controls.OnUpdate
 		controls.OnUpdate = function(self, dt)
+			OnUpdate_base(self, dt)
 			local curscreensize = {GLOBAL.TheSim:GetScreenSize()}
 			if curscreensize[1] ~= screensize[1] or curscreensize[2] ~= screensize[2] then
 				PositionMiniMap(controls, curscreensize)
