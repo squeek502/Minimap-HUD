@@ -5,8 +5,7 @@ version = "1.0.4"
 forumthread = "/files/file/352-minimap-hud/"
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
-dont_starve_compatible = true
-reign_of_giants_compatible = true
+dst_compatible = true
 
 -- this setting is dumb; this mod is likely compatible with all future versions
 api_version = 10
