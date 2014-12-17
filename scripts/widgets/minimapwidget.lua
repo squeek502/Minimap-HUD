@@ -8,7 +8,7 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
 
 	mapscale = mapscale or 1
 
-    self.minimap = GetWorld().minimap.MiniMap
+    self.minimap = TheWorld.minimap.MiniMap
 
     self.bg = self:AddChild(Image("images/hud.xml", "map.tex"))
 	self.bg.inst.ImageWidget:SetBlendMode( BLENDMODE.Premultiplied )
