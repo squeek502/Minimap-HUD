@@ -6,6 +6,8 @@ forumthread = "/files/file/352-minimap-hud/"
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
 dst_compatible = true
+client_only_mod = true
+all_clients_require_mod = false
 
 -- this setting is dumb; this mod is likely compatible with all future versions
 api_version = 10
