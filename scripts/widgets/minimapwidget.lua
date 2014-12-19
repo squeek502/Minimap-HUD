@@ -4,7 +4,7 @@ local ImageButton = require "widgets/imagebutton"
 
 local MiniMapWidget = Class(Widget, function(self, mapscale)
     Widget._ctor(self, "MiniMapWidget")
-	self.owner = GetPlayer()
+	self.owner = ThePlayer
 
 	mapscale = mapscale or 1
 
