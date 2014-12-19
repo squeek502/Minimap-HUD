@@ -45,7 +45,6 @@ end
 ----------------------------------------
 
 local require = GLOBAL.require
-local GetWorld = GLOBAL.GetWorld
 
 local function PositionMiniMap(controls, screensize)
 	local hudscale = controls.top_root:GetScale()
@@ -59,6 +58,10 @@ local function PositionMiniMap(controls, screensize)
 	)
 end
 
+-- holds the minimap widget once its added to the controls widget
+local minimap_small = nil
+
+-- create a minimap widget as a child of the controls widget
 local function AddMiniMap(controls)
 
 	-- for some reason, without this the game would crash without an error when calling controls.topright_root:AddChild
@@ -98,41 +101,43 @@ local function AddMiniMap(controls)
 			end
 		end
 
-		-- special case: ToggleMap gets bypassed when the map gets hidden while on the map screen
-		local MapScreen = require "screens/mapscreen"
-
-		MapScreen_OnControl_base = MapScreen.OnControl
-		MapScreen.OnControl = function( self, control, down )
-			local ret = MapScreen_OnControl_base(self, control, down)
-
-			if ret and control == GLOBAL.CONTROL_MAP then
-				controls.minimap_small:Show()
-			end
-
-			return ret
-		end
-
-		-- keep track of zooming while on the map screen
-		local MapWidget = require "widgets/mapwidget"
-
-		MapWidget_OnZoomIn_base = MapWidget.OnZoomIn
-		MapWidget.OnZoomIn = function(self)
-			MapWidget_OnZoomIn_base( self )
-			if self.shown then
-				controls.minimap_small.mapscreenzoom = math.max(0,controls.minimap_small.mapscreenzoom-1)
-			end
-		end
-
-		MapWidget_OnZoomOut_base = MapWidget.OnZoomOut
-		MapWidget.OnZoomOut = function(self)
-			MapWidget_OnZoomOut_base( self )
-			if self.shown then
-				controls.minimap_small.mapscreenzoom = controls.minimap_small.mapscreenzoom+1
-			end
-		end
+		minimap_small = controls.minimap_small
 
 	end)
 
 end
 
 AddClassPostConstruct( "widgets/controls", AddMiniMap )
+
+-- special case: ToggleMap gets bypassed when the map gets hidden while on the map screen
+local MapScreen = require "screens/mapscreen"
+
+MapScreen_OnControl_base = MapScreen.OnControl
+MapScreen.OnControl = function( self, control, down )
+	local ret = MapScreen_OnControl_base(self, control, down)
+
+	if minimap_small and ret and control == GLOBAL.CONTROL_MAP then
+		minimap_small:Show()
+	end
+
+	return ret
+end
+
+-- keep track of zooming while on the map screen
+local MapWidget = require "widgets/mapwidget"
+
+MapWidget_OnZoomIn_base = MapWidget.OnZoomIn
+MapWidget.OnZoomIn = function(self)
+	MapWidget_OnZoomIn_base( self )
+	if minimap_small and self.shown then
+		minimap_small.mapscreenzoom = math.max(0,minimap_small.mapscreenzoom-1)
+	end
+end
+
+MapWidget_OnZoomOut_base = MapWidget.OnZoomOut
+MapWidget.OnZoomOut = function(self)
+	MapWidget_OnZoomOut_base( self )
+	if minimap_small and self.shown then
+		minimap_small.mapscreenzoom = minimap_small.mapscreenzoom+1
+	end
+end
