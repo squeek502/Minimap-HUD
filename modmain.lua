@@ -1,4 +1,4 @@
-
+GLOBAL.setmetatable(env, {__index=GLOBAL})
 local mapscale = GetModConfigData("Minimap Size")
 local position_str = GetModConfigData("Position")
 local margin_size_x = GetModConfigData("Horizontal Margin")
@@ -44,12 +44,10 @@ end
 -- Do the stuff
 ----------------------------------------
 
-local require = GLOBAL.require
-local GetWorld = GLOBAL.GetWorld
 
 local function PositionMiniMap(controls, screensize)
 	local hudscale = controls.top_root:GetScale()
-	local screenw_full, screenh_full = GLOBAL.unpack(screensize)
+	local screenw_full, screenh_full = unpack(screensize)
 	local screenw = screenw_full/hudscale.x
 	local screenh = screenh_full/hudscale.y
 	controls.minimap_small:SetPosition(
@@ -106,7 +104,7 @@ local function AddMiniMap( inst )
 		MapScreen.OnControl = function( self, control, down )
 			local ret = MapScreen_OnControl_base(self, control, down)
 
-			if ret and control == GLOBAL.CONTROL_MAP then
+			if ret and control == CONTROL_MAP then
 				controls.minimap_small:Show()
 			end
 
