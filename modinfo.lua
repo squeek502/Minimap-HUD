@@ -7,6 +7,7 @@ icon_atlas = "modicon.xml"
 icon = "modicon.tex"
 dont_starve_compatible = true
 reign_of_giants_compatible = true
+shipwrecked_compatible = true
 
 -- this setting is dumb; this mod is likely compatible with all future versions
 api_version = 6
