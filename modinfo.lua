@@ -76,4 +76,31 @@ configuration_options =
         },
         default = 25
     },
+    {
+        name = "FPS",
+        label = "FPS throttling",
+        hover = "Minimap's throttled updates per second",
+        options =
+        {
+            {description = "Default", data = 0, hover = "Throttling disabled"},
+            {description = "10 fps", data = 0.1},
+            {description = "8 fps", data = 0.125},
+            {description = "6 fps", data = 0.166},
+            {description = "5 fps", data = 0.20},
+            {description = "4 fps", data = 0.25},
+            {description = "3 fps", data = 0.333},
+            {description = "2 fps", data = 0.5},
+            {description = "1 fps", data = 1},
+            {description = "4f/5s", data = 1.25},
+            {description = "2f/3s", data = 1.5},
+            {description = "1f/2s", data = 2},
+            {description = "1f/3s", data = 3},
+            {description = "1f/4s", data = 4},
+            {description = "1f/5s", data = 5},
+            {description = "1f/6s", data = 6},
+            {description = "1f/8s", data = 8},
+            {description = "1f/10s", data = 10},
+        },
+        default = 0
+    },
 }

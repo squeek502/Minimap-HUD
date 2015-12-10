@@ -34,6 +34,10 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
     self.togglebutton:SetOnClick( function() self:ToggleOpen() end )
     self.togglebutton:Hide()
 
+	-- fps stuff, needs to be before SetOpen()
+	self.fps = 0 -- 0 if disabled, otherwise delay till next update
+	self.task_fps = nil -- the next update task
+
     self:SetOpen( true )
 
 	self.mapscreenzoom = 1
@@ -62,9 +66,7 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Show()
     	self.bg:SetPosition( 0,0,0 )
     	self.bg:SetSize( self.mapsize.w, self.mapsize.h )
-		if not self.minimap:IsVisible() then
-			self.minimap:ToggleVisibility()
-		end
+		self:EnableMinimapUpdating()
 	else
 		self.open = false
 		local newbuttonpos = Point(0, self.mapsize.h/2 - 20, 0)
@@ -74,9 +76,7 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Hide()
     	self.bg:SetPosition( 0, self.mapsize.h/2 - 20, 0 )
     	self.bg:SetSize( self.mapsize.w, 5 )
-		if self.minimap:IsVisible() then
-			self.minimap:ToggleVisibility()
-		end
+		self:DisableMinimapUpdating()
 	end
 end
 
@@ -182,8 +182,8 @@ function MiniMapWidget:Offset(dx,dy)
 end
 
 function MiniMapWidget:OnShow()
-	if not self.minimap:IsVisible() and self:IsOpen() then
-		self.minimap:ToggleVisibility()
+	if self:IsOpen() then
+		self:EnableMinimapUpdating()
 	end
 	self.minimap:Zoom(-1000)
 	self.minimap:Zoom(self.minimapzoom)
@@ -191,9 +191,7 @@ function MiniMapWidget:OnShow()
 end
 
 function MiniMapWidget:OnHide()
-	if self.minimap:IsVisible() then
-		self.minimap:ToggleVisibility()
-	end
+	self:DisableMinimapUpdating()
 	self.minimap:Zoom(-1000)
 	self.minimap:Zoom(self.mapscreenzoom)
 end
@@ -203,6 +201,80 @@ function MiniMapWidget:ToggleVisibility()
 		self:Hide()
 	else
 		self:Show()
+	end
+end
+
+function MiniMapWidget:IsMinimapUpdating()
+	if self.fps > 0 then
+		-- fps throttling enabled
+		return self.task_fps ~= nil
+	else
+		-- fps throttling disabled
+		return self.minimap:IsVisible()
+	end
+end
+
+function MiniMapWidget:EnableMinimapUpdating()
+	if self.fps > 0 then
+		-- fps throttling enabled
+		-- need to check this, function is called twice in succession on startup (on creation and when first shown)
+		if self.task_fps ~= nil then
+			self.task_fps:Cancel()
+			self.task_fps = nil
+		end
+		self:SetFPSTask1()
+	else
+		-- fps throttling disabled
+		if not self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+	end
+end
+
+function MiniMapWidget:DisableMinimapUpdating()
+	if self.fps > 0 then
+		-- fps throttling enabled
+		if self.task_fps ~= nil then
+			self.task_fps:Cancel()
+			self.task_fps = nil
+		end
+	else
+		-- fps throttling disabled
+		if self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+	end
+end
+
+-- schedule task starting minimap updating
+-- assumes fps throttling is enabled
+function MiniMapWidget:SetFPSTask1()
+	self.task_fps = self.inst:DoTaskInTime(self.fps, function()
+		if not self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+		self:SetFPSTask0()
+	end)
+end
+
+-- schedule task ending minimap updating
+-- assumes fps throttling is enabled
+function MiniMapWidget:SetFPSTask0()
+	self.task_fps = self.inst:DoTaskInTime(0, function()
+		if self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+		self:SetFPSTask1()
+	end)
+end
+
+function MiniMapWidget:SetFPS(fps)
+	local wasenabled = self:IsMinimapUpdating()
+
+	self:DisableMinimapUpdating()
+	self.fps = fps
+	if wasenabled then
+		self:EnableMinimapUpdating()
 	end
 end
 
