@@ -3,6 +3,7 @@ local mapscale = GetModConfigData("Minimap Size")
 local position_str = GetModConfigData("Position")
 local margin_size_x = GetModConfigData("Horizontal Margin")
 local margin_size_y = GetModConfigData("Vertical Margin")
+local fps = GetModConfigData("FPS")
 
 local dir_vert = 0
 local dir_horiz = 0
@@ -100,6 +101,8 @@ local function AddMiniMap(controls)
 				controls.minimap_small:Show()
 			end
 		end
+
+		controls.minimap_small:SetFPS(fps)
 
 		minimap_small = controls.minimap_small
 
