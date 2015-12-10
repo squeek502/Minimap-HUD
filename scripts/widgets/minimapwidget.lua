@@ -62,6 +62,9 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Show()
     	self.bg:SetPosition( 0,0,0 )
     	self.bg:SetSize( self.mapsize.w, self.mapsize.h )
+		if not self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
 	else
 		self.open = false
 		local newbuttonpos = Point(0, self.mapsize.h/2 - 20, 0)
@@ -71,6 +74,9 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Hide()
     	self.bg:SetPosition( 0, self.mapsize.h/2 - 20, 0 )
     	self.bg:SetSize( self.mapsize.w, 5 )
+		if self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
 	end
 end
 
@@ -176,7 +182,7 @@ function MiniMapWidget:Offset(dx,dy)
 end
 
 function MiniMapWidget:OnShow()
-	if not self.minimap:IsVisible() then
+	if not self.minimap:IsVisible() and self:IsOpen() then
 		self.minimap:ToggleVisibility()
 	end
 	self.minimap:Zoom(-1000)
