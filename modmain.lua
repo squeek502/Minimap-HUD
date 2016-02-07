@@ -1,8 +1,8 @@
-
 local mapscale = GetModConfigData("Minimap Size")
 local position_str = GetModConfigData("Position")
 local margin_size_x = GetModConfigData("Horizontal Margin")
 local margin_size_y = GetModConfigData("Vertical Margin")
+local ups = GetModConfigData("Updates Per Second")
 
 local dir_vert = 0
 local dir_horiz = 0
@@ -100,6 +100,8 @@ local function AddMiniMap(controls)
 				controls.minimap_small:Show()
 			end
 		end
+
+		controls.minimap_small:SetUPS(ups)
 
 		minimap_small = controls.minimap_small
 

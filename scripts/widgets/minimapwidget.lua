@@ -34,6 +34,10 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
     self.togglebutton:SetOnClick( function() self:ToggleOpen() end )
     self.togglebutton:Hide()
 
+	-- ups stuff, needs to be before SetOpen()
+	self.ups = 0 -- 0 if disabled, otherwise delay till next update
+	self.task_ups = nil -- the next update task
+
     self:SetOpen( true )
 
 	self.mapscreenzoom = 1
@@ -62,6 +66,7 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Show()
     	self.bg:SetPosition( 0,0,0 )
     	self.bg:SetSize( self.mapsize.w, self.mapsize.h )
+		self:EnableMinimapUpdating()
 	else
 		self.open = false
 		local newbuttonpos = Point(0, self.mapsize.h/2 - 20, 0)
@@ -71,6 +76,7 @@ function MiniMapWidget:SetOpen( state )
     	self.img:Hide()
     	self.bg:SetPosition( 0, self.mapsize.h/2 - 20, 0 )
     	self.bg:SetSize( self.mapsize.w, 5 )
+		self:DisableMinimapUpdating()
 	end
 end
 
@@ -176,8 +182,8 @@ function MiniMapWidget:Offset(dx,dy)
 end
 
 function MiniMapWidget:OnShow()
-	if not self.minimap:IsVisible() then
-		self.minimap:ToggleVisibility()
+	if self:IsOpen() then
+		self:EnableMinimapUpdating()
 	end
 	self.minimap:Zoom(-1000)
 	self.minimap:Zoom(self.minimapzoom)
@@ -185,9 +191,7 @@ function MiniMapWidget:OnShow()
 end
 
 function MiniMapWidget:OnHide()
-	if self.minimap:IsVisible() then
-		self.minimap:ToggleVisibility()
-	end
+	self:DisableMinimapUpdating()
 	self.minimap:Zoom(-1000)
 	self.minimap:Zoom(self.mapscreenzoom)
 end
@@ -197,6 +201,80 @@ function MiniMapWidget:ToggleVisibility()
 		self:Hide()
 	else
 		self:Show()
+	end
+end
+
+function MiniMapWidget:IsMinimapUpdating()
+	if self.ups > 0 then
+		-- ups throttling enabled
+		return self.task_ups ~= nil
+	else
+		-- ups throttling disabled
+		return self.minimap:IsVisible()
+	end
+end
+
+function MiniMapWidget:EnableMinimapUpdating()
+	if self.ups > 0 then
+		-- ups throttling enabled
+		-- need to check this, function is called twice in succession on startup (on creation and when first shown)
+		if self.task_ups ~= nil then
+			self.task_ups:Cancel()
+			self.task_ups = nil
+		end
+		self:ScheduleUpdate()
+	else
+		-- ups throttling disabled
+		if not self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+	end
+end
+
+function MiniMapWidget:DisableMinimapUpdating()
+	if self.ups > 0 then
+		-- ups throttling enabled
+		if self.task_ups ~= nil then
+			self.task_ups:Cancel()
+			self.task_ups = nil
+		end
+	else
+		-- ups throttling disabled
+		if self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+	end
+end
+
+-- schedule task starting minimap updating
+-- assumes ups throttling is enabled
+function MiniMapWidget:ScheduleUpdate()
+	self.task_ups = self.inst:DoTaskInTime(self.ups, function()
+		if not self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+		self:StopUpdatingAndReschedule()
+	end)
+end
+
+-- schedule task ending minimap updating
+-- assumes ups throttling is enabled
+function MiniMapWidget:StopUpdatingAndReschedule()
+	self.task_ups = self.inst:DoTaskInTime(0, function()
+		if self.minimap:IsVisible() then
+			self.minimap:ToggleVisibility()
+		end
+		self:ScheduleUpdate()
+	end)
+end
+
+function MiniMapWidget:SetUPS(ups)
+	local wasenabled = self:IsMinimapUpdating()
+
+	self:DisableMinimapUpdating()
+	self.ups = ups
+	if wasenabled then
+		self:EnableMinimapUpdating()
 	end
 end
 

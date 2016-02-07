@@ -1,7 +1,7 @@
 name = "Minimap HUD"
 description = "Adds a minimap to the HUD"
 author = "squeek"
-version = "1.0.4"
+version = "1.0.5"
 forumthread = "/files/file/352-minimap-hud/"
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
@@ -75,5 +75,33 @@ configuration_options =
             {description = "Giant", data = 450},
         },
         default = 25
+    },
+    {
+        name = "Updates Per Second",
+        label = "Update throttling",
+        hover = "Minimap's throttled updates per second, can help with FPS issues",
+        options =
+        {
+            {description = "Default", data = 0, hover = "Throttling disabled, always keep map up-to-date"},
+            {description = "10 ups", data = 0.1, hover = "Update the map 10 times per second"},
+            {description = "8 ups", data = 0.125, hover = "Update the map 8 times per second"},
+            {description = "6 ups", data = 0.166, hover = "Update the map 6 times per second"},
+            {description = "5 ups", data = 0.20, hover = "Update the map 5 times per second"},
+            {description = "4 ups", data = 0.25, hover = "Update the map 4 times per second"},
+            {description = "3 ups", data = 0.333, hover = "Update the map 3 times per second"},
+            {description = "2 ups", data = 0.5, hover = "Update the map 2 times per second"},
+            {description = "1 ups", data = 1, hover = "Update the map every second"},
+            {description = "4/5 ups", data = 1.25, hover = "Update the map 4 times in 5 seconds"},
+            {description = "2/3 ups", data = 1.5, hover = "Update the map 2 times in 3 seconds"},
+            {description = "1/2 ups", data = 2, hover = "Update the map every 2 seconds"},
+            {description = "1/3 ups", data = 3, hover = "Update the map every 3 seconds"},
+            {description = "1/4 ups", data = 4, hover = "Update the map every 4 seconds"},
+            {description = "1/5 ups", data = 5, hover = "Update the map every 5 seconds"},
+            {description = "1/6 ups", data = 6, hover = "Update the map every 6 seconds"},
+            {description = "1/8 ups", data = 8, hover = "Update the map every 8 seconds"},
+            {description = "1/10 ups", data = 10, hover = "Update the map every 10 seconds"},
+            {description = "1/30 ups", data = 30, hover = "Update the map every 30 seconds"},
+        },
+        default = 0
     },
 }
