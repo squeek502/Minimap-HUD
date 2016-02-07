@@ -3,7 +3,7 @@ local mapscale = GetModConfigData("Minimap Size")
 local position_str = GetModConfigData("Position")
 local margin_size_x = GetModConfigData("Horizontal Margin")
 local margin_size_y = GetModConfigData("Vertical Margin")
-local fps = GetModConfigData("FPS")
+local ups = GetModConfigData("Updates Per Second")
 
 local dir_vert = 0
 local dir_horiz = 0
@@ -98,7 +98,7 @@ local function AddMiniMap( inst )
 			end
 		end
 
-		controls.minimap_small:SetFPS(fps)
+		controls.minimap_small:SetUPS(ups)
 
 		-- special case: ToggleMap gets bypassed when the map gets hidden while on the map screen
 		local MapScreen = require "screens/mapscreen"
