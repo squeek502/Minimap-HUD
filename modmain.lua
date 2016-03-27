@@ -107,7 +107,7 @@ local function AddMiniMap( inst )
 		MapScreen.OnControl = function( self, control, down )
 			local ret = MapScreen_OnControl_base(self, control, down)
 
-			if ret and control == GLOBAL.CONTROL_MAP then
+			if ret and (control == GLOBAL.CONTROL_MAP or control == GLOBAL.CONTROL_CANCEL) then
 				controls.minimap_small:Show()
 			end
 
