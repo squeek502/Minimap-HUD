@@ -118,7 +118,7 @@ MapScreen_OnControl_base = MapScreen.OnControl
 MapScreen.OnControl = function( self, control, down )
 	local ret = MapScreen_OnControl_base(self, control, down)
 
-	if minimap_small and ret and control == GLOBAL.CONTROL_MAP then
+	if minimap_small and ret and (control == GLOBAL.CONTROL_MAP or control == GLOBAL.CONTROL_CANCEL) then
 		minimap_small:Show()
 	end
 
