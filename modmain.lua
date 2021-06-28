@@ -1,4 +1,5 @@
 local mapscale = GetModConfigData("Minimap Size")
+local ultrawide = GetModConfigData("Ultrawide")
 local position_str = GetModConfigData("Position")
 local margin_size_x = GetModConfigData("Horizontal Margin")
 local margin_size_y = GetModConfigData("Vertical Margin")
@@ -71,7 +72,7 @@ local function AddMiniMap(controls)
 		-- add the minimap widget and set its position
 		local MiniMapWidget = require "widgets/minimapwidget"
 
-		controls.minimap_small = controls.top_root:AddChild( MiniMapWidget( mapscale ) )
+		controls.minimap_small = controls.top_root:AddChild( MiniMapWidget( mapscale, ultrawide ) )
 		local screensize = {GLOBAL.TheSim:GetScreenSize()}
 		PositionMiniMap(controls, screensize)
 

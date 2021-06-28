@@ -2,11 +2,12 @@ local Widget = require "widgets/widget"
 local Image = require "widgets/image"
 local ImageButton = require "widgets/imagebutton"
 
-local MiniMapWidget = Class(Widget, function(self, mapscale)
+local MiniMapWidget = Class(Widget, function(self, mapscale, ultrawide)
     Widget._ctor(self, "MiniMapWidget")
 	self.owner = ThePlayer
 
 	mapscale = mapscale or 1
+	ultrawide = ultrawide or 1
 
     self.minimap = TheWorld.minimap.MiniMap
 
@@ -19,7 +20,7 @@ local MiniMapWidget = Class(Widget, function(self, mapscale)
 	self:UpdateTexture()
 
 	local map_w, map_h = self.bg:GetSize()
-	local map_w, map_h = map_w*mapscale, map_h*mapscale
+	local map_w, map_h = map_w*mapscale*ultrawide, map_h*mapscale/ultrawide
 
 	self.mapsize = {w=map_w, h=map_h}
 
