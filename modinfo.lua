@@ -28,6 +28,15 @@ configuration_options =
         default = 0.225,
     },
     {
+        name = "Ultrawide",
+        options =
+        {
+            {description = "False", data = 1.000},
+            {description = "True", data = 1.146},
+        },
+        default = 1.000,
+    },
+    {
         name = "Position",
         options =
         {
