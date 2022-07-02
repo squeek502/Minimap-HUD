@@ -130,16 +130,16 @@ end
 local MapWidget = require "widgets/mapwidget"
 
 MapWidget_OnZoomIn_base = MapWidget.OnZoomIn
-MapWidget.OnZoomIn = function(self)
-	MapWidget_OnZoomIn_base( self )
+MapWidget.OnZoomIn = function(self, negativedelta)
+	MapWidget_OnZoomIn_base(self, negativedelta)
 	if minimap_small and self.shown then
 		minimap_small.mapscreenzoom = math.max(0,minimap_small.mapscreenzoom-1)
 	end
 end
 
 MapWidget_OnZoomOut_base = MapWidget.OnZoomOut
-MapWidget.OnZoomOut = function(self)
-	MapWidget_OnZoomOut_base( self )
+MapWidget.OnZoomOut = function(self, positivedelta)
+	MapWidget_OnZoomOut_base(self, positivedelta)
 	if minimap_small and self.shown then
 		minimap_small.mapscreenzoom = minimap_small.mapscreenzoom+1
 	end
