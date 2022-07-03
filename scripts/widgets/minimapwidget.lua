@@ -186,15 +186,13 @@ function MiniMapWidget:OnShow()
 	if self:IsOpen() then
 		self:EnableMinimapUpdating()
 	end
-	self.minimap:Zoom(-1000)
-	self.minimap:Zoom(self.minimapzoom)
+	self.minimap:Zoom(self.minimapzoom - self.minimap:GetZoom())
 	self.minimap:ResetOffset()
 end
 
 function MiniMapWidget:OnHide()
 	self:DisableMinimapUpdating()
-	self.minimap:Zoom(-1000)
-	self.minimap:Zoom(self.mapscreenzoom)
+	self.minimap:Zoom(self.mapscreenzoom - self.minimap:GetZoom())
 end
 
 function MiniMapWidget:ToggleVisibility()
