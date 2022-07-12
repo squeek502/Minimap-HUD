@@ -136,7 +136,7 @@ MapWidget_OnZoomIn_base = MapWidget.OnZoomIn
 MapWidget.OnZoomIn = function(self, deltazoom, ...)
 	local returnValues = {MapWidget_OnZoomIn_base( self, deltazoom, ... )}
 	if minimap_small and self.shown then
-		minimap_small.mapscreenzoom = math.max(0,minimap_small.mapscreenzoom + deltazoom)
+		minimap_small.mapscreenzoom = math.max(0,minimap_small.mapscreenzoom + (deltazoom or -0.1))
 	end
 	return unpack(returnValues)
 end
@@ -145,7 +145,7 @@ MapWidget_OnZoomOut_base = MapWidget.OnZoomOut
 MapWidget.OnZoomOut = function(self, deltazoom, ...)
 	local returnValues = {MapWidget_OnZoomOut_base( self, deltazoom, ... )}
 	if minimap_small and self.shown then
-		minimap_small.mapscreenzoom = minimap_small.mapscreenzoom + deltazoom
+		minimap_small.mapscreenzoom = minimap_small.mapscreenzoom + (deltazoom or 0.1)
 	end
 	return unpack(returnValues)
 end
