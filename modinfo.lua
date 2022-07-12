@@ -1,7 +1,7 @@
 name = "Minimap HUD"
 description = "Adds a minimap to the HUD"
 author = "squeek"
-version = "1.0.8"
+version = "1.0.9"
 forumthread = "/files/file/352-minimap-hud/"
 icon_atlas = "modicon.xml"
 icon = "modicon.tex"
